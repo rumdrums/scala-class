@@ -1,0 +1,40 @@
+Scala Class Hierarchy
+
+                     scala.Any
+                    /        \
+                   /          \
+               scala.AnyVal    \
+                              scala.AnyRef (java.lang.Object)
+                                 \
+                                  \
+                                scala.ScalaObject
+
+scala.AnyVal is parent class of primitive types like Double, Float, Long, Int
+scala.AnyRef is parent of "reference" types
+scala.Null is subtype of all reference types, type of null is Null
+scala.Nothing is a subtype of any other type
+
+
+
+
+Cons-Lists, aka Immutable Lists
+. constructed from:
+  -- Nil -- empty list
+  -- Cons -- cell containing an element and pointer to remainder of list
+
+Type Parameters
+. both classes and functions can have type parameters
+. type erasure:
+  -- type parameters only matter for compiler
+  -- type params are removed before program is evaluated
+  -- languages like Java also use this
+  -- c++, c#, f# do not
+
+Polymorphism examples
+. subtyping: instances of a subclass can be passed to a base class
+. generics
+
+def nth(n: Int, l: List[T]) = {
+  if (n > (l.length - 1)) throw new IndexOutOfBoundsException()
+  else l[n]
+}

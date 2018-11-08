@@ -1,0 +1,58 @@
+Substitution Model
+. all evaluation does is reduce expression to a value, similar to algebraic simplification
+. requires operations to be side-effect free
+. something as simple as "c++" has effect on c that can't be captured in a series of simplification steps
+
+Call by name vs call by value
+ -- former doesn't evaluate arguments until they have to be
+ -- latter evaluates arguments before they are used
+
+def isGoodEnough(guess: Double, x: Double) = ???
+
+Tail Recursion
+. if the last action of a function consists of calling a function (which _may_ be the same), one
+  stack frame would be sufficient for both functions. This is called a tail-tail
+. JVM limits maximum depth of recursive call to few thousand stack frames
+. Tail recursion can be required using @tailrec annotation, which will raise error if func is not tail recursive
+. If you don't expect function to have deep recursion, write it the clearest way (i.e., not necessarily tail recursive)
+
+Non-tail-recursive factorial
+```
+def factorial(n: Int): Int =
+  if (n == 0) 1
+  else n * factorial(n-1)
+```
+
+Tail-Recursive factorial
+```
+def factorialTr(n: Int, total: Int = 0): Int =
+  if (n == 0) total
+  else factorial(n-1, total+n)
+```
+      1
+     1 1
+    1 2 1
+   1 3 3 1
+  1 4 6 4 1
+ 1 5 10 10 5 1
+1 6 15 20 15 6 1
+
+r3c1 = 1
+r3c2 = r2c1 + r2c2
+r3c3 = 1
+
+r4c1 = 1
+r4c2 = r3c1 + r3c2
+r4c3 = r3c2 + r3c3
+
+r5c1 = 1
+r5c2 = r4c1 + r4c2
+r5c3 = r4c2 + r4c3
+r5c4 = r4c3 + r4c4
+
+
+1
+1 1
+1 2 1
+1 3 3 1
+1 4 6 4 1

@@ -1,0 +1,51 @@
+Higher Order Functions
+
+Currying ...
+
+Fixed Points
+. values of x for which f(x) = x
+
+Data abstraction -- ability to choose different implementations of the data w/out affecting clients
+
+Operators
+. infix:
+ -- instead of writing:
+
+r.add(s)
+r.less(s)
+r.max(s)
+
+you can write:
+
+r add s
+r less s
+r max s
+
+. operators can be alphanumeric or symbolic
+
+So, instead of a method called 'less', you can call it '<'
+
+. Unary operators
+ -- '-' can be used for both substration (i.e., if it's a method that takes an argument), or it can be unary, i.e. it is
+ placed in front of a value to make it negative
+ -- for the latter, method name would be 'unary_-'
+
+Operator Precedence
+. in increasing order of precedence:
+
+  anything that starts with a letter
+  |
+  ^
+  &
+  < >
+  = !
+  :
+  + -
+  * / %
+  all other special characters
+
+So, for this:
+a + b ^? c ?^ d less a ==> b | c
+
+Parenthesis added without changing anything:
+((a + b) ^? (c ?^ d)) less ((a ==> b) | c)

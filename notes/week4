@@ -1,0 +1,78 @@
+Object Oriented-ness
+
+. scala is relatively pure oo language, in that all values can be objects
+
+def < (x: Boolean): Boolean = ifThenElse(false, x)
+def > (x: Boolean): Boolean = ifThenElse(x.unary_!, false)
+
+
+Functions are Objects with `apply` methods
+
+Type Bounds
+S <: T -- means S is a subtype of T
+S >: T -- means S is a supertype of T, or that T is a subtype of S
+
+
+Covariance
+. Correlation between subtyping relationships of complex types and the subtyping
+  relationship of their component types
+. Example:
+
+  List(A) is covariant with List(B), where A is a subtype of B
+
+. Lists are covariant, arrays are not. Why? Because arrays are mutable.
+
+So, Array(A) is not covariant with List(B), even though A is a subtype of B
+
+Why? Because otherwise you could do this:
+
+1) val arr:Array[Int] = Array[Int](1,2,3)
+2) val arr2:Array[Any] = arr
+3) arr2(0) = 2.54 // this would set arr(0) to be a float, which is bad
+
+Immutable lists are not subject to same problem, because a new List would be created in step 3
+
+
+More on Variance
+C[T] is parameterized type and A <: B
+. 3 possible relationships:
+  Covariance -- C[A] <: C[B]
+  Contravariance -- C[A] >: C[B]
+  Nonvariant -- neither C[A] nor C[B] is a subtype of the other
+
+. declaring this in Scala:
+class C[+A] { ... } -- covariance
+class C[-A] { ... } -- contravariance
+class C[A] { ... } -- neither
+
+
+Typing Rules for Functions
+Example:
+  Empty and NonEmpty are subtypes of Intset
+. type A = Intset => NonEmpty
+. type B = NonEmpty => Intset
+
+A <: B
+
+
+. Generally:
+
+if A2 <: A1, B1 <: B2 (yes, B1 <: B2), then:
+
+A1 => B1 <: A2 => B2
+
+Functions are _contravariant_ in their argument types and covariant in their result types
+
+How the scala compiler checks Variance:
+. covariant type params can only appear in method results
+. contravariant type params can only appear in method parameters
+. invariant type params can appear anywhere
+
+More fine-grained than above:
+. covariant type parameters may appear in _lower bounds_ of method type params
+. contravariant type params may appear in _upper bounds_ of method
+
+i.e.,
+
+def prepend [ U >: T ] (elem: U): List[U] = new Cons(elem, this)
+
