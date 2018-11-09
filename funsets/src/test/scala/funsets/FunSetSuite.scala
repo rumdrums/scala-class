@@ -107,6 +107,8 @@ class FunSetSuite extends FunSuite {
       assert(contains(s, 1), "Union 1")
       assert(contains(s, 2), "Union 2")
       assert(!contains(s, 3), "Union 3")
+      // extry
+      assert(!contains(diff(singletonSet(3), singletonSet(3)), 3), "Union 3")
     }
   }
 
@@ -130,5 +132,15 @@ class FunSetSuite extends FunSuite {
       assert(testS1 == true)
       assert(testS2 == false)
     }
+  }
+  test(" map works") {
+      val s = union(union(singletonSet(1), singletonSet(2)), singletonSet(3))
+      val f: Int => Int = (e: Int) => e * e
+      val testS = map(s, f)
+    assert(contains(testS, 1))
+    assert(contains(testS, 4))
+    assert(contains(testS, 9))
+      assert(!contains(testS, 2))
+      assert(!contains(testS, 3))
   }
 }
