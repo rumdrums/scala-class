@@ -106,13 +106,14 @@ abstract class TweetSet {
 }
 
 class Empty extends TweetSet {
-  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = ???
 
   /**
     * The following methods are already implemented
     */
 
   def filter(p: Tweet => Boolean): TweetSet = this
+
+  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = acc
 
   def union(that: TweetSet): TweetSet = that
 
@@ -128,6 +129,8 @@ class Empty extends TweetSet {
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def filter(p: Tweet => Boolean): TweetSet = {
+    val acc = new Empty()
+    ( left.filterAcc(p, acc) union right.filterAcc(p, acc)) union this.filterAcc(p, acc)
   }
 
   def union(that: TweetSet): TweetSet = {
@@ -136,8 +139,8 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   }
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
-    if (p(elem)) acc incl elem
-    else this.remove(elem)
+    if ( p(elem) ) acc incl elem
+    else acc remove elem
   }
 
 
