@@ -150,7 +150,8 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def union(that: TweetSet): TweetSet = {
     // from lecture 3.1:
-    ((left union right) union that) incl elem
+//    ((left union right) union that) incl elem
+    left union (right union (that incl elem))
   }
 
   def mostRetweeted: Tweet = {
@@ -252,7 +253,15 @@ object GoogleVsApple {
   val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-  // lazy val googleTweets: TweetSet = google.map(it => TweetReader.allTweets.filter(t => t.text.contains(it)))
+  lazy val googleTweets: TweetSet = {
+    TweetReader.allTweets.filter(t => {
+      true
+//      google.exists(i => {
+//        t.text.contains(i)
+//      })
+    })
+  }
+
   lazy val appleTweets: TweetSet = ???
 
   /**

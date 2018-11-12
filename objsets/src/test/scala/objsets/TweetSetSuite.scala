@@ -82,8 +82,22 @@ class TweetSetSuite extends FunSuite {
     val set6 = set5.incl(new Tweet("d", "d body 4", 1))
     set6.foreach(f => println(f))
     assert(set6.mostRetweeted == greatest)
-    val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
-    lazy val googleTweets = google.map(it => TweetReader.allTweets.filter(t => t.text.contains(it)))
-    println("googleTweets: " + googleTweets)
+  }
+
+  test("google tweets") {
+//    GoogleVsApple.googleTweets.foreach(t => println("this: " + t.text))
+    TweetReader.allTweets.foreach(t => println("this: " + t.text))
+    var i = 0
+    TweetReader.allTweets.foreach(_ => i = i+1)
+    println("I: " + i)
+  }
+
+  test("filter misc") {
+    val set1 = new Empty
+    val set2 = set1.incl(new Tweet("a", "a body 1", 21))
+    val set3 = set2.incl(new Tweet("b", "b body 2", 28))
+    val set4 = set3.incl(new Tweet("c", "c body 3", 19))
+    val filtered = set4.filter(t => t.retweets % 7 == 0)
+    filtered.foreach(t => println(t))
   }
 }
