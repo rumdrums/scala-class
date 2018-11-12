@@ -76,3 +76,31 @@ i.e.,
 
 def prepend [ U >: T ] (elem: U): List[U] = new Cons(elem, this)
 
+
+Lists
+. All lists constructed from an empty list and the construction operation (:: -- prounced "Cons")
+
+`x :: xs` gives new list with first element x followed by elements of xs
+
+
+. convention in scala that all operators ending in ':' associate to the right
+. so :
+
+val nums = 1 :: (2 :: (3 :: (4 :: Nil )))
+
+is same as:
+
+val nums = 1 :: 2 :: 3 :: 4 :: Nil
+
+
+. also, all operators ending in ':' are method calls of _RIGHT-HAND_ operand:
+
+ie, above is equivalent to:
+
+Nil.::4.::3.::2.::1
+
+. All operations on lists can be expressed in terms of these methods:
+
+head
+tail
+isEmpty

@@ -1,13 +1,13 @@
 package objsets
 
-import org.scalatest.FunSuite
-
-
+import objsets.GoogleVsApple.google
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class TweetSetSuite extends FunSuite {
+
   trait TestSets {
     val set1 = new Empty
     val set2 = set1.incl(new Tweet("a", "a body", 20))
@@ -66,9 +66,24 @@ class TweetSetSuite extends FunSuite {
   test("descending: set5") {
     new TestSets {
       val trends = set5.descendingByRetweet
+      trends.foreach(f => println("Tweet = " + f))
       assert(!trends.isEmpty)
       assert(trends.head.user == "a" || trends.head.user == "b")
     }
   }
 
+  test("mostRetweeted works") {
+    val greatest = new Tweet("e", "e body greatest", 100)
+    val set1 = new Empty
+    val set2 = set1.incl(new Tweet("a", "a body 1", 21))
+    val set3 = set2.incl(new Tweet("b", "b body 2", 20))
+    val set4 = set3.incl(new Tweet("c", "c body 3", 19))
+    val set5 = set4.incl(greatest)
+    val set6 = set5.incl(new Tweet("d", "d body 4", 1))
+    set6.foreach(f => println(f))
+    assert(set6.mostRetweeted == greatest)
+    val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
+    lazy val googleTweets = google.map(it => TweetReader.allTweets.filter(t => t.text.contains(it)))
+    println("googleTweets: " + googleTweets)
   }
+}

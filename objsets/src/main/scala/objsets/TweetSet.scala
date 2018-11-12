@@ -1,5 +1,7 @@
 package objsets
 
+import java.util.NoSuchElementException
+
 /**
   * A class to represent tweets.
   */
@@ -64,7 +66,7 @@ abstract class TweetSet {
     * Question: Should we implment this method here, or should it remain abstract
     * and be implemented in the subclasses?
     */
-  def mostRetweeted: Tweet = ???
+  def mostRetweeted: Tweet
 
   /**
     * Returns a list containing all tweets of this set, sorted by retweet count
@@ -75,7 +77,7 @@ abstract class TweetSet {
     * Question: Should we implment this method here, or should it remain abstract
     * and be implemented in the subclasses?
     */
-  def descendingByRetweet: TweetList = ???
+  def descendingByRetweet: TweetList
 
   /**
     * The following methods are already implemented
@@ -103,19 +105,27 @@ abstract class TweetSet {
     * This method takes a function and applies it to every element in the set.
     */
   def foreach(f: Tweet => Unit): Unit
+
+  def isEmpty(): Boolean
 }
 
 class Empty extends TweetSet {
-
-  /**
-    * The following methods are already implemented
-    */
 
   def filter(p: Tweet => Boolean): TweetSet = this
 
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = acc
 
   def union(that: TweetSet): TweetSet = that
+
+  def mostRetweeted: Tweet = throw new NoSuchElementException("empty")
+
+  def descendingByRetweet: TweetList = Nil
+
+  def isEmpty(): Boolean = true
+
+  /**
+    * The following methods are already implemented
+    */
 
   def contains(tweet: Tweet): Boolean = false
 
@@ -130,19 +140,58 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
   def filter(p: Tweet => Boolean): TweetSet = {
     val acc = new Empty()
-    ( left.filterAcc(p, acc) union right.filterAcc(p, acc)) union this.filterAcc(p, acc)
+    (left.filterAcc(p, acc) union right.filterAcc(p, acc)) union this.filterAcc(p, acc)
+  }
+
+  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
+    if (p(elem)) acc incl elem
+    else acc remove elem
   }
 
   def union(that: TweetSet): TweetSet = {
     // from lecture 3.1:
-    (( left union right) union that ) incl elem
+    ((left union right) union that) incl elem
   }
 
-  def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
-    if ( p(elem) ) acc incl elem
-    else acc remove elem
+  def mostRetweeted: Tweet = {
+    val t1 = if ((!right.isEmpty) && elem.retweets < right.mostRetweeted.retweets) right.mostRetweeted else elem
+    val t2 = if ((!left.isEmpty) && elem.retweets < left.mostRetweeted.retweets) left.mostRetweeted else elem
+    if (t1.retweets > t2.retweets) t1 else t2
   }
 
+  def descendingByRetweet: TweetList = {
+    if ( isEmpty() ) Nil
+    else {
+      val most = mostRetweeted
+      new Cons(most, remove(most).descendingByRetweet)
+    }
+  }
+
+  // this doesnt work b/c it returns ascending list
+  //  def descendingByRetweet: TweetList = {
+  //    def iter(ts: TweetSet, tl: TweetList): TweetList = {
+  //      if (ts.isEmpty()) tl
+  //      else {
+  //        val most = ts.mostRetweeted
+  //        iter(ts.remove(most), new Cons(most, tl))
+  //      }
+  //    }
+  //    iter(this, Nil)
+  //  }
+
+  // this doesn't work and is also not recursive:
+  //  def descendingByRetweet: TweetList = {
+  //    var ts: TweetSet = this
+  //    var tl: TweetList = Nil
+  //    while (! ts.isEmpty ) {
+  //      val most = ts.mostRetweeted
+  //      ts = ts.remove(most)
+  //      tl = new Cons(most, tl)
+  //    }
+  //    tl
+  //  }
+
+  def isEmpty(): Boolean = false
 
   /**
     * The following methods are already implemented
@@ -183,6 +232,7 @@ trait TweetList {
       f(head)
       tail.foreach(f)
     }
+
 }
 
 object Nil extends TweetList {
@@ -202,7 +252,7 @@ object GoogleVsApple {
   val google = List("android", "Android", "galaxy", "Galaxy", "nexus", "Nexus")
   val apple = List("ios", "iOS", "iphone", "iPhone", "ipad", "iPad")
 
-  lazy val googleTweets: TweetSet = ???
+  // lazy val googleTweets: TweetSet = google.map(it => TweetReader.allTweets.filter(t => t.text.contains(it)))
   lazy val appleTweets: TweetSet = ???
 
   /**
