@@ -85,10 +85,8 @@ class TweetSetSuite extends FunSuite {
   }
 
   test("google tweets") {
-//    GoogleVsApple.googleTweets.foreach(t => println("this: " + t.text))
-    TweetReader.allTweets.foreach(t => println("this: " + t.text))
     var i = 0
-    TweetReader.allTweets.foreach(_ => i = i+1)
+    GoogleVsApple.googleTweets.foreach(_ => i = i+1)
     println("I: " + i)
   }
 
