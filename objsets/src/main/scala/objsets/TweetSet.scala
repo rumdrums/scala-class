@@ -41,7 +41,9 @@ abstract class TweetSet {
     * Question: Can we implment this method here, or should it remain abstract
     * and be implemented in the subclasses?
     */
-  def filter(p: Tweet => Boolean): TweetSet
+  def filter(p: Tweet => Boolean): TweetSet = {
+    filterAcc(p, new Empty)
+  }
 
 
   /**
@@ -111,8 +113,6 @@ abstract class TweetSet {
 
 class Empty extends TweetSet {
 
-  def filter(p: Tweet => Boolean): TweetSet = this
-
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = acc
 
   def union(that: TweetSet): TweetSet = that
@@ -138,12 +138,8 @@ class Empty extends TweetSet {
 
 class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
 
-  def filter(p: Tweet => Boolean): TweetSet = {
-    filterAcc(p, new Empty)
-  }
-
   def filterAcc(p: Tweet => Boolean, acc: TweetSet): TweetSet = {
-    val accd = left.filterAcc(p, acc) union right.filterAcc(p, acc)
+    val accd = left.filterAcc(p, right.filterAcc(p, acc))
     if ( p(elem) ) accd incl elem
     else accd
   }
@@ -151,7 +147,8 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
   def union(that: TweetSet): TweetSet = {
     // from lecture 3.1:
 //    ((left union right) union that) incl elem
-    left union (right union (that incl elem))
+//    left union (right union (that incl elem))
+    left.union(right.union(that)).incl(elem)
   }
 
   def mostRetweeted: Tweet = {
