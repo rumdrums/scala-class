@@ -75,4 +75,12 @@ object TweetReader {
     else unionOfAllTweetSets(curSets.tail, acc.union(curSets.head))
 
   val allTweets: TweetSet = unionOfAllTweetSets(tweetSets, new Empty)
+
+  val allTheTweets: TweetSet = {
+    def iter(i: Int, ts: TweetSet): TweetSet = {
+      if (i > 10000) ts
+      else iter(i+1, new NonEmpty(new Tweet("c", "c body", 7), allTweets, allTweets))
+    }
+    iter(0, allTweets)
+  }
 }
