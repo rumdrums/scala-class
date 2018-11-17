@@ -67,7 +67,7 @@ abstract class TweetSet {
     */
   def mostRetweeted: Tweet
 
-  def mostRetweetedAcc(acc: Tweet): Tweet
+//  def mostRetweetedAcc(acc: Tweet): Tweet
 
   /**
     * Returns a list containing all tweets of this set, sorted by retweet count
@@ -118,7 +118,7 @@ class Empty extends TweetSet {
 
   def mostRetweeted: Tweet = throw new NoSuchElementException("empty")
 
-  def mostRetweetedAcc(acc: Tweet) = acc
+//  def mostRetweetedAcc(acc: Tweet) = acc
 
   def descendingByRetweet: TweetList = Nil
 
@@ -152,17 +152,23 @@ class NonEmpty(elem: Tweet, left: TweetSet, right: TweetSet) extends TweetSet {
     left.union(right.union(that)).incl(elem)
   }
 
-  //  def mostRetweeted: Tweet = {
-  //    val t1 = if ( (!right.isEmpty) && elem.retweets < right.mostRetweeted.retweets) right.mostRetweeted else elem
-  //    val t2 = if ( (!left.isEmpty) && elem.retweets < left.mostRetweeted.retweets) left.mostRetweeted else elem
-  //    if (t1.retweets > t2.retweets) t1 else t2
-  //  }
+    def mostRetweeted: Tweet = {
+      val t1: Tweet = if ( (!right.isEmpty) ) {
+        val rmt: Tweet = right.mostRetweeted
+        if ( elem.retweets < rmt.retweets ) rmt else elem
+      } else elem
+      val t2: Tweet = if ( (!left.isEmpty ) ) {
+        val lmt: Tweet = left.mostRetweeted
+        if (elem.retweets < lmt.retweets) lmt else elem
+      } else elem
+      if (t1.retweets > t2.retweets) t1 else t2
+    }
 
-  def mostRetweeted: Tweet = mostRetweetedAcc(elem)
-
-  def mostRetweetedAcc(acc: Tweet): Tweet = {
-    left.mostRetweetedAcc(right.mostRetweetedAcc(if (elem.retweets > acc.retweets) elem else acc))
-  }
+//  def mostRetweeted: Tweet = mostRetweetedAcc(elem)
+//
+//  def mostRetweetedAcc(acc: Tweet): Tweet = {
+//    left.mostRetweetedAcc(right.mostRetweetedAcc(if (elem.retweets > acc.retweets) elem else acc))
+//  }
 
   def descendingByRetweet: TweetList = {
     if (isEmpty()) Nil
