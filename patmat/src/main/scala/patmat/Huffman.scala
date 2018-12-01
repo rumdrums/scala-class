@@ -2,6 +2,8 @@ package patmat
 
 import common._
 
+import scala.collection.immutable.Map
+
 /**
   * Assignment 4: Huffman coding
   *
@@ -26,9 +28,15 @@ object Huffman {
 
 
   // Part 1: Basics
-  def weight(tree: CodeTree): Int = ??? // tree match ...
+  def weight(tree: CodeTree): Int = tree match {
+    case f: Fork => f.weight
+    case l: Leaf => l.weight
+  }
 
-  def chars(tree: CodeTree): List[Char] = ??? // tree match ...
+  def chars(tree: CodeTree): List[Char] = tree match {
+    case f: Fork => f.chars
+    case l: Leaf => l.char :: Nil
+  }
 
   def makeCodeTree(left: CodeTree, right: CodeTree) =
     Fork(left, right, chars(left) ::: chars(right), weight(left) + weight(right))
@@ -70,7 +78,9 @@ object Huffman {
     * println("integer is  : "+ theInt)
     * }
     */
-  def times(chars: List[Char]): List[(Char, Int)] = ???
+
+  def times(chars: List[Char]): List[(Char, Int)] =
+    chars.foldLeft(Map[Char, Int]() withDefaultValue 0)((m, c) => m + (c -> (m(c) + 1))).toList
 
   /**
     * Returns a list of `Leaf` nodes for a given frequency table `freqs`.
@@ -79,12 +89,15 @@ object Huffman {
     * head of the list should have the smallest weight), where the weight
     * of a leaf is the frequency of the character.
     */
-  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = ???
+  def makeOrderedLeafList(freqs: List[(Char, Int)]): List[Leaf] = freqs.map(pair => new Leaf(pair._1, pair._2)).sortBy(leaf => leaf.weight)
 
   /**
     * Checks whether the list `trees` contains only one single code tree.
     */
-  def singleton(trees: List[CodeTree]): Boolean = ???
+  def singleton(trees: List[CodeTree]): Boolean = trees match {
+    case _ :: Nil => true
+    case _ => false
+  }
 
   /**
     * The parameter `trees` of this function is a list of code trees ordered
