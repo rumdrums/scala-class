@@ -1,0 +1,20 @@
+Pairs
+
+Implicit Parameters
+. dont' have to be explicitly passed to function
+. compiler figures out right parameter to pass
+
+If implicit parameter of type T
+. has type compatible with T
+. is visible at point of the function call or definied in companion object associated with T
+
+If compiler can find _one_ definition it works, otherwise returns compiler error
+
+
+val xs = List(0,1,2,3,4,5)
+( xs foldLeft 0) ( _ + _ )
+( xs foldRight 0) ( _ + _ )
+
+
+ xs reduceRight ( _ - _ )
+ xs reduceLeft ( _ - _ )

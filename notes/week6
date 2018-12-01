@@ -1,0 +1,26 @@
+val j = (1 until n) flatMap (i =>
+  (1 until i) map (j => (i, j))) filter (pair => isPrime(pair._1 + pair._2))
+
+
+The above creates a list of pairs of numbers and filters out ones whose individual values don't equal a prime number
+
+But it's hard to read
+How to make this easier?
+
+For expressions
+. basically similar to imperative for loops, but they build lists of the result of iterations, whereas traditional
+  for loops rely on side-effects happening within them
+
+for (s) yield e
+
+s is a sequence of generators (p <- e) and filters
+can be multiple generators
+
+same as above with for:
+
+for {
+  i <- 1 until n
+  j <- 1 until i
+  if isPrime(i + j)
+} yield (i, j)
+
