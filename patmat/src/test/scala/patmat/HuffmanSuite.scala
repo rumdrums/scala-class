@@ -54,4 +54,18 @@ class HuffmanSuite extends FunSuite {
   test("times") {
     assert(times(List('a','b','c', 'a')) == List(('a', 2), ('b', 1), ('c', 1)))
   }
+
+  test("combine") {
+    val tree = List(new Leaf('a', 1), new Leaf('b', 1), new Leaf('c', 1), new Leaf('d', 4))
+    assert(combine(tree) == List(new Leaf('c', 1), new Fork(new Leaf('a', 1), new Leaf('b', 1), List('a','b'), 2), new Leaf('d', 4)))
+  }
+
+  test("until") {
+    val tree = List(new Leaf('a', 1), new Leaf('b', 1), new Leaf('c', 1), new Leaf('d', 4))
+    println(until(singleton, combine)(tree))
+  }
+
+  test("createCodeTree") {
+    println(createCodeTree("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabc".toList))
+  }
 }
