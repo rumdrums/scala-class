@@ -47,7 +47,11 @@ class HuffmanSuite extends FunSuite {
 
   test("decode and encode a very short text should be identity") {
     new TestTrees {
-      assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
+      val encoded = encode(t1)("ab".toList)
+      println("encoded: ", encoded)
+      val decoded = decode(t1, encoded)
+      println("decoded: ", decoded)
+      assert(decoded === "ab".toList)
     }
   }
 
@@ -67,5 +71,28 @@ class HuffmanSuite extends FunSuite {
 
   test("createCodeTree") {
     println(createCodeTree("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabc".toList))
+  }
+
+  test("find") {
+    new TestTrees {
+      assert(find(t2, 'a') === List(0,0))
+      assert(find(t2, 'b') === List(0,1))
+      assert(find(t2, 'd') === List(1))
+    }
+  }
+
+  test("traverse") {
+    new TestTrees {
+      val (char, bits) = traverse(t1, List(0, 1))
+      assert(char === 'a')
+      assert(bits === List(1))
+    }
+  }
+
+  test("decode") {
+   new TestTrees {
+     val decoded = decode(t1, List(0,1,0,1))
+     println("decoded: ", decoded)
+   }
   }
 }
