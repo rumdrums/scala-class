@@ -95,4 +95,8 @@ class HuffmanSuite extends FunSuite {
      println("decoded: ", decoded)
    }
   }
+
+  test("decodesecret") {
+    println(decodedSecret)
+  }
 }
