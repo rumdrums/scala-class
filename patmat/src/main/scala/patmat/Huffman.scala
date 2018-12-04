@@ -257,9 +257,10 @@ object Huffman {
     */
   def convert(tree: CodeTree): CodeTable = {
     def iter(tree: CodeTree, acc: List[Bit]): CodeTable = tree match {
-      case l: Leaf => ( l.char, acc ) :: Nil
+      case l: Leaf => ( l.char, acc.reverse ) :: Nil
       case f: Fork => iter(f.left, 0 :: acc) ::: iter(f.right, 1 :: acc)
     }
+    iter(tree, List())
   }
 
   /**
@@ -267,7 +268,7 @@ object Huffman {
     * use it in the `convert` method above, this merge method might also do some transformations
     * on the two parameter code tables.
     */
-  def mergeCodeTables(a: CodeTable, b: CodeTable): CodeTable = ???
+  def mergeCodeTables(a: CodeTable, b: CodeTable): CodeTable = a ::: b
 
   /**
     * This function encodes `text` according to the code tree `tree`.
@@ -275,5 +276,93 @@ object Huffman {
     * To speed up the encoding process, it first converts the code tree to a code table
     * and then uses it to perform the actual encoding.
     */
-  def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  //     text.foldLeft(List[Bit]())((acc: List[Bit], c: Char) => acc ::: find(tree, c))
+  def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = {
+    val table = convert(tree)
+    println("table: ", table)
+    text.flatMap(c => codeBits(table)(c))
+  }
 }
+
+/*
+Your overall score for this assignment is 8.36 out of 10.00
+
+
+The code you submitted did not pass all of our tests: your submission achieved a score of
+6.36 out of 8.00 in our tests.
+
+In order to find bugs in your code, we advise to perform the following steps:
+ - Take a close look at the test output that you can find below: it should point you to
+   the part of your code that has bugs.
+ - Run the tests that we provide with the handout on your code.
+ - The tests we provide do not test your code in depth: they are very incomplete. In order
+   to test more aspects of your code, write your own unit tests.
+ - Take another very careful look at the assignment description. Try to find out if you
+   misunderstood parts of it. While reading through the assignment, write more tests.
+
+Below you can find a short feedback for every individual test that failed.
+
+Our automated style checker tool could not find any issues with your code. You obtained the maximal
+style score of 2.00.
+
+======== LOG OF FAILED TESTS ========
+Your solution achieved a testing score of 214 out of 269.
+
+Below you can see a short feedback for every test that failed,
+indicating the reason for the test failure and how many points
+you lost for each individual test.
+
+Tests that were aborted took too long too complete or crashed the
+JVM. Such crashes can arise due to infinite non-terminating
+loops or recursion (StackOverflowException) or excessive memory
+consumption (OutOfMemoryException).
+
+[Test Description] quick encode gives the correct byte sequence
+[Observed Error] List(0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0) did not equal List(1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1, 1)
+[Lost Points] 20
+
+[Test Description] convert: code table is created correctly
+[Observed Error] List((a,List(0, 0)), (b,List(1, 0)), (d,List(1))) did not equal List((a,List(0, 0)), (b,List(0, 1)), (d,List(1)))
+[Lost Points] 20
+
+[Test Description] combine of a singleton or nil
+[Observed Error] 1
+[exception was thrown] detailed error message in debug output section below
+[Lost Points] 5
+
+[Test Description] decode and quick encode is identity
+[Observed Error] List(' ', 'u', 'u', ',', ' ', '0', 'r', 'e', 's', ' ', 's', 'c', 's', ',', 'a', ' ', 'i', 'b', 'e', ' ', 'c', 'n', 'a', 'i', 'i', 'y', ',', 'b', 't', 's', 'i', 'w', 'r', ' ', 'f', 'c', 'l', 'm', 'a', 'l', ' ', 'k', 'd', 'd', ' ', 's', 'r', 'l', 'r', 'a', 'n', 't', ' ', 't', '0', 'i', 'h', 'n', 'r', 's', 't', 'm', 'e', 'm') did not equal List('t', 'u', 'r', 'e', ' ', 'f', 'r', 'o', 'm', ' ', '4', '5', ' ', 'B', 'C', ',', ' ', 'm', 'a', 'k', 'i', 'n', 'g', ' ', 'i', 't', ' ', 'o', 'v', 'e', 'r', ' ', '2', '0', '0', '0', ' ', 'y', 'e', 'a', 'r', 's', ' ', 'o', 'l', 'd', '.', ' ', 'R', 'i', 'c', 'h', 'a', 'r', 'd', ' ', 'M', 'c')
+[Lost Points] 10
+
+======== TESTING ENVIRONMENT ========
+Limits: memory: 256m,  total time: 850s,  per test case time: 240s
+
+======== DEBUG OUTPUT OF TESTING TOOL ========
+[test failure log] test name: HuffmanSuite::combine of a singleton or nil::5
+java.lang.IndexOutOfBoundsException: 1
+scala.collection.LinearSeqOptimized$class.apply(LinearSeqOptimized.scala:65)
+scala.collection.immutable.List.apply(List.scala:84)
+patmat.Huffman$.combine(Huffman.scala:115)
+patmat.HuffmanSuite$$anonfun$15.apply$mcV$sp(HuffmanSuite.scala:138)
+ch.epfl.lamp.grading.GradingSuite$$anonfun$test$1.apply$mcV$sp(GradingSuite.scala:124)
+ch.epfl.lamp.grading.GradingSuite$$anonfun$test$1.apply(GradingSuite.scala:122)
+ch.epfl.lamp.grading.GradingSuite$$anonfun$test$1.apply(GradingSuite.scala:122)
+org.scalatest.Transformer$$anonfun$apply$1.apply$mcV$sp(Transformer.scala:22)
+org.scalatest.OutcomeOf$class.outcomeOf(OutcomeOf.scala:85)
+org.scalatest.OutcomeOf$.outcomeOf(OutcomeOf.scala:104)
+org.scalatest.Transformer.apply(Transformer.scala:22)
+org.scalatest.Transformer.apply(Transformer.scala:20)
+org.scalatest.FunSuiteLike$$anon$1.apply(FunSuiteLike.scala:166)
+org.scalatest.Suite$class.withFixture(Suite.scala:1122)
+org.scalatest.FunSuite.withFixture(FunSuite.scala:1555)
+org.scalatest.FunSuiteLike$class.invokeWithFixture$1(FunSuiteLike.scala:163)
+org.scalatest.FunSuiteLike$$anonfun$runTest$1.apply(FunSuiteLike.scala:175)
+org.scalatest.FunSuiteLike$$anonfun$runTest$1.apply(FunSuiteLike.scala:175)
+org.scalatest.SuperEngine.runTestImpl(Engine.scala:306)
+org.scalatest.FunSuiteLike$class.runTest(FunSuiteLike.scala:175)
+org.scalatest.FunSuite.runTest(FunSuite.scala:1555)
+org.scalatest.FunSuiteLike$$anonfun$runTests$1.apply(FunSuiteLike.scala:208)
+org.scalatest.FunSuiteLike$$anonfun$runTests$1.apply(FunSuiteLike.scala:208)
+org.scalatest.SuperEngine$$anonfun$traverseSubNodes$1$1.apply(Engine.scala:413)
+org.scalatest.SuperEngine$$anonfun$traverseSubNodes$1$1.apply(Engine.scala:401)
+ */

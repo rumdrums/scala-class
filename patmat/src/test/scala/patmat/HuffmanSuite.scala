@@ -99,4 +99,19 @@ class HuffmanSuite extends FunSuite {
   test("decodesecret") {
     println(decodedSecret)
   }
+
+  test("convert") {
+    new TestTrees {
+      val table = convert(t1)
+      assert(table == List(('a', List[Bit](0)), ('b', List[Bit](1))))
+    }
+  }
+
+  test("quickEncode") {
+    new TestTrees {
+      val actual = quickEncode(t2)(List('b','a','d','d','a','d'))
+      val expected = List(0,1,0,0,1,1,0,0,1)
+      assert(actual == expected)
+    }
+  }
 }
