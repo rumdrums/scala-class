@@ -18,3 +18,4 @@ val xs = List(0,1,2,3,4,5)
 
  xs reduceRight ( _ - _ )
  xs reduceLeft ( _ - _ )
+
