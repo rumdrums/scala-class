@@ -1,31 +1,23 @@
-val a = "abcA".toLowerCase.count(_ == '1')
-println(a)
-
-type Occurrences = List[(Char, Int)]
-
-//def wordOccurrences(w: String): Occurrences =
-//  w.toLowerCase.groupBy(c => w.count(_ == c))
-
-val w = "babcA"
-val x = w.toLowerCase()
-val z = x.groupBy(c => x.toLowerCase.count(_ == c))
-
-println(x.foldLeft(Map[Char, Int]() withDefaultValue 0)((m, c) => m + (c -> (m(c) + 1))).toList)
+val a = List(('a', 2),('b', 2), ('c', 3)).foldLeft(List[(Char, Int)]()) {
+  (acc, pair) => {
+    pair :: acc
+  }
+}
+print(a)
 
 
-println(x.groupBy(c => c).map { case (c, s) => (c, s.length) }.toList.sorted)
+print(List(1) ++ List())
 
 
-import forcomp.Anagrams.{Occurrences, _}
-import forcomp.loadDictionary
+def calledWhat(l: List[Int]): List[Int] = {
+  println("called: ", l)
+ for {
+   i <- l
+   rest <- calledWhat(l.tail)
+ } yield rest
+}
 
-//val wordOccurrences: List[(Occurrences, List[Word])] = loadDictionary.map(w => wordOccurrences(w) -> (w :: Nil))
+calledWhat(List(3,2,1))
 
-//    loadDictionary.foldLeft(Map[Occurrences, List[Word]]().withDefaultValue(List[Word]()))
-//    ((acc: Map[Occurrences, List[Word]], w: Word) => acc + ( wordOccurrences(w) -> w :: acc(wordOccurrences(w))) )
+println(List() :: List())
 
-println("wtf")
-loadDictionary.head
-
-val test: List[(Occurrences, List[Word])] = loadDictionary.map(w => wordOccurrences(w) -> (w :: Nil))
-println(test)

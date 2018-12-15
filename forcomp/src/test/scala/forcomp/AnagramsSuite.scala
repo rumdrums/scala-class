@@ -103,4 +103,29 @@ class AnagramsSuite extends FunSuite  {
   test("sentenceOccurrences 2: abcd e fg hh") {
     assert(sentenceOccurrences(List("abcd", "e", "fg", "hh")) === List(('a', 1), ('b', 1), ('c', 1), ('d', 1), ('e', 1), ('f', 1), ('g', 1), ('h', 2)))
   }
+
+  test("combinations: abbac") {
+    val abba = List(('a', 2), ('b', 2), ('c', 1))
+    val abbacomb = List(
+      List(),
+      List(('a', 1)),
+      List(('a', 1), ('b', 1)),
+      List(('a', 1), ('b', 1), ('c', 1)),
+      List(('a', 1), ('b', 2)),
+      List(('a', 1), ('b', 2), ('c', 1)),
+      List(('a', 1), ('c', 1)),
+      List(('a', 2)),
+      List(('a', 2), ('b', 1)),
+      List(('a', 2), ('b', 1), ('c', 1)),
+      List(('a', 2), ('b', 2)),
+      List(('a', 2), ('b', 2), ('c', 1)),
+      List(('a', 2), ('c', 1)),
+      List(('b', 1)),
+      List(('b', 1), ('c', 1)),
+      List(('b', 2)),
+      List(('b', 2), ('c', 1)),
+      List(('c', 1))
+    )
+    assert(combinations(abba).toSet == abbacomb.toSet)
+  }
 }
