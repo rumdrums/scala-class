@@ -96,7 +96,6 @@ object Anagrams {
       i <- 1 to count
       rest <- combinations(occurrences.filter(pair => pair._1 > char))
     } yield List((char, i)) ::: rest
-    println("combos: ", combos)
     List() :: combos
   }
 
@@ -107,7 +106,6 @@ object Anagrams {
   //            val rest = combinations(occurrences.filter(_._1 > char))
   //            List((char, i)) :: rest
   //          })
-  //          println("combos: ", combos.flatten)
   //          combos.flatten
   //        })
   //      }
@@ -185,5 +183,9 @@ object Anagrams {
     *
     * Note: There is only one anagram of an empty sentence.
     */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    val occs = sentenceOccurrences(sentence)
+    val combos = combinations(occs)
+    val allWords = combos.map
+  }
 }
