@@ -89,33 +89,16 @@ object Anagrams {
     * Note that the order of the occurrence list subsets does not matter -- the subsets
     * in the example above could have been displayed in some other order.
     */
+
   def combinations(occurrences: Occurrences): List[Occurrences] = {
-    println("called with: ", occurrences)
     val combos = for {
       (char, count) <- occurrences
       i <- 1 to count
-      rest <- combinations(occurrences.filter(_._1 > char))
-    } yield List((char, i)) ++ rest
+      rest <- combinations(occurrences.filter(pair => pair._1 > char))
+    } yield List((char, i)) ::: rest
     println("combos: ", combos)
-    println("returning : ", List() :: combos)
     List() :: combos
   }
-
-  //  def combinations(occurrences: Occurrences): List[Occurrences] = {
-  //   val combos = for {
-  //     (char, count) <- occurrences
-  //     i <- 1 to count
-  //     rest <- {
-  //       val _rest = occurrences.filterNot(pair => pair._1 == char)
-  //       println("_rest: ", _rest)
-  //       if (!_rest.isEmpty) combinations(_rest) else List()
-  //     }
-  //   } yield List(char, i) :: rest
-  ////    yield (char, i)
-  ////      yield List((char, i))
-  //    println("combos: ", combos)
-  //   List(occurrences)
-  //  }
 
   //      def combinations(occurrences: Occurrences): List[Occurrences] = {
   //        occurrences.flatMap((pair: (Char, Int)) => {
@@ -153,7 +136,14 @@ object Anagrams {
     * Note: the resulting value is an occurrence - meaning it is sorted
     * and has no zero-entries.
     */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+    x.foldLeft(List[(Char, Int)]())((acc: Occurrences, pair: (Char, Int)) => {
+      val z = y.toMap.withDefaultValue(0)
+      val (char, int) = pair
+      val zz = int - z(char)
+      if (zz > 0) acc ::: List((char, zz)) else acc
+    })
+  }
 
   /** Returns a list of all anagram sentences of the given sentence.
     *
