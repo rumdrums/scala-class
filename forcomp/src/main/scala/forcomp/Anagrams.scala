@@ -185,7 +185,10 @@ object Anagrams {
     */
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
     val occs = sentenceOccurrences(sentence)
+    println("occs: ", occs)
     val combos = combinations(occs)
-    val allWords = combos.map
+    return List(List("abc"))
+
+//    val allWords = combos.map
   }
 }
