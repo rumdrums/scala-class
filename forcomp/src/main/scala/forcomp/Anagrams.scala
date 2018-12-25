@@ -41,6 +41,7 @@ object Anagrams {
   def sentenceOccurrences(s: Sentence): Occurrences =
     wordOccurrences(s.foldLeft(new String())((acc: String, str: String) => acc + str))
 
+
   /** The `dictionaryByOccurrences` is a `Map` from different occurrences to a sequence of all
     * the words that have that occurrence count.
     * This map serves as an easy way to obtain all the anagrams of a word given its occurrence list.
@@ -183,12 +184,59 @@ object Anagrams {
     *
     * Note: There is only one anagram of an empty sentence.
     */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
-    val occs = sentenceOccurrences(sentence)
-    println("occs: ", occs)
-    val combos = combinations(occs)
-    return List(List("abc"))
 
-//    val allWords = combos.map
+  //  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+  //
+  //    def iter(occs: Occurrences): List[Sentence] = {
+  //      val combos = combinations(occs)
+  //
+  //      for {
+  //        listOccs <- combos
+  //        word <- dictionaryByOccurrences(listOccs)
+  //        rest <- iter(subtract(occs, listOccs))
+  //      } yield word :: rest
+  //    }
+  //
+  //    iter(sentenceOccurrences(sentence))
+  //  }
+
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    def iter(occs: Occurrences): List[Sentence] = {
+      println("caleld with: ", occs)
+      val combos = combinations(occs)
+      combos.flatMap(listOccs => {
+       dictionaryByOccurrences(listOccs).flatMap(word => {
+        iter(subtract(occs, listOccs)).map(rest => {
+          word :: rest
+        })
+       })
+      })
+    }
+    iter(sentenceOccurrences(sentence))
   }
+
+
+//  def badSentenceAnagrams(sentence: Sentence): List[Sentence] = {
+//
+//    def iter(words: Sentence): List[Sentence] = {
+//      if (words == null) List[Sentence]()
+//      else words.flatMap(word => {
+//        iter(words.tail).map(rest => {
+//          word :: rest
+//        })
+//      })
+//    }
+//
+//    val words = allWords(sentence)
+//    println("words: ", words)
+//    iter(words)
+//  }
+
+  def allWords(sentence: Sentence): List[Word] = {
+    val occs = sentenceOccurrences(sentence)
+    val combos = combinations(occs)
+    val allWords = combos.flatMap(occ => dictionaryByOccurrences(occ))
+    allWords
+  }
+
 }
