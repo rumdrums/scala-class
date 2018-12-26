@@ -187,12 +187,17 @@ object Anagrams {
 
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
     def iter(occs: Occurrences): List[Sentence] = {
+      println("called with: ", occs)
       if (occs.isEmpty) List(Nil)
-      else for {
-        listOccs <- combinations(occs)
-        word <- dictionaryByOccurrences(listOccs)
-        sentence <- iter(subtract(occs, wordOccurrences(word)))
-      } yield word :: sentence
+      else {
+        val stuff = for {
+          listOccs <- combinations(occs)
+          word <- dictionaryByOccurrences(listOccs)
+          sentence <- iter(subtract(occs, listOccs))
+        } yield word :: sentence
+        println("returning: ", stuff)
+        stuff
+      }
     }
     iter(sentenceOccurrences(sentence))
   }

@@ -7,3 +7,4 @@ println("a: ", a)
 
 
 
+sentenceAnagrams(List("tarz"))
