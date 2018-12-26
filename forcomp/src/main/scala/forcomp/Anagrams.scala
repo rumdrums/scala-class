@@ -185,52 +185,33 @@ object Anagrams {
     * Note: There is only one anagram of an empty sentence.
     */
 
-  //  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
-  //
-  //    def iter(occs: Occurrences): List[Sentence] = {
-  //      val combos = combinations(occs)
-  //
-  //      for {
-  //        listOccs <- combos
-  //        word <- dictionaryByOccurrences(listOccs)
-  //        rest <- iter(subtract(occs, listOccs))
-  //      } yield word :: rest
-  //    }
-  //
-  //    iter(sentenceOccurrences(sentence))
-  //  }
-
   def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
     def iter(occs: Occurrences): List[Sentence] = {
-      println("caleld with: ", occs)
-      val combos = combinations(occs)
-      combos.flatMap(listOccs => {
-       dictionaryByOccurrences(listOccs).flatMap(word => {
-        iter(subtract(occs, listOccs)).map(rest => {
-          word :: rest
-        })
-       })
-      })
+      if (occs.isEmpty) List(Nil)
+      else for {
+        listOccs <- combinations(occs)
+        word <- dictionaryByOccurrences(listOccs)
+        sentence <- iter(subtract(occs, wordOccurrences(word)))
+      } yield word :: sentence
     }
     iter(sentenceOccurrences(sentence))
   }
 
-
-//  def badSentenceAnagrams(sentence: Sentence): List[Sentence] = {
-//
-//    def iter(words: Sentence): List[Sentence] = {
-//      if (words == null) List[Sentence]()
-//      else words.flatMap(word => {
-//        iter(words.tail).map(rest => {
-//          word :: rest
-//        })
-//      })
-//    }
-//
-//    val words = allWords(sentence)
-//    println("words: ", words)
-//    iter(words)
-//  }
+  //  def badSentenceAnagrams(sentence: Sentence): List[Sentence] = {
+  //
+  //    def iter(words: Sentence): List[Sentence] = {
+  //      if (words == null) List[Sentence]()
+  //      else words.flatMap(word => {
+  //        iter(words.tail).map(rest => {
+  //          word :: rest
+  //        })
+  //      })
+  //    }
+  //
+  //    val words = allWords(sentence)
+  //    println("words: ", words)
+  //    iter(words)
+  //  }
 
   def allWords(sentence: Sentence): List[Word] = {
     val occs = sentenceOccurrences(sentence)
@@ -239,4 +220,9 @@ object Anagrams {
     allWords
   }
 
+  def forNothing[T](list: List[T]): List[T] = {
+    for {
+      m <- list
+    } yield m
+  }
 }
