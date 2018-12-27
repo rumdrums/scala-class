@@ -185,7 +185,9 @@ object Anagrams {
     * Note: There is only one anagram of an empty sentence.
     */
 
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+  def sentenceAnagrams = otherSentenceAnagrams _
+
+  def forSentenceAnagrams(sentence: Sentence): List[Sentence] = {
     def iter(occs: Occurrences): List[Sentence] = {
       println("called with: ", occs)
       if (occs.isEmpty) List(Nil)
@@ -198,6 +200,20 @@ object Anagrams {
         println("returning: ", stuff)
         stuff
       }
+    }
+    iter(sentenceOccurrences(sentence))
+  }
+
+  def otherSentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    def iter(occs: Occurrences): List[Sentence] = {
+      if (occs.isEmpty) List(Nil)
+      else combinations(occs).flatMap(listOccs => {
+        dictionaryByOccurrences(listOccs).flatMap(word => {
+         iter(subtract(occs, listOccs)).map(sentence => {
+           word :: sentence
+         })
+        })
+      })
     }
     iter(sentenceOccurrences(sentence))
   }
